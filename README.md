@@ -119,7 +119,7 @@ Which to use:
 Start to finish, from a clean Pi:
 
 ```bash
-git clone https://github.com/<user>/edubuddy.git
+git clone https://github.com/codebyash-21/edubuddy.git
 cd edubuddy
 
 chmod +x setup_pi.sh
