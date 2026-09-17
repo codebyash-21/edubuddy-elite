@@ -1,0 +1,57 @@
+# ---------------------------------------------------------------- textbooks
+# Textbook PDFs are copyrighted and are NOT redistributed with this repository.
+# Put your own PDFs in books/ and run `python ingest.py --all`.
+books/*
+!books/.gitkeep
+
+# ---------------------------------------------------------------- generated
+# The search index is rebuilt from books/ on first run. It is machine-specific
+# and large, so it is never committed.
+library/*
+!library/.gitkeep
+
+# Downloaded model weights: several GB. setup.sh / setup_pi.sh fetch these.
+models/
+*.gguf
+*.bin
+*.safetensors
+*.pt
+
+# ---------------------------------------------------------------- evaluation
+# results/ IS tracked on purpose: the validation runs are the project's
+# evidence. Only the folder placeholder is exempted from the rules above.
+!results/
+!results/*.csv
+!results/*.md
+!results/*.json
+
+# ---------------------------------------------------------------- python
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# ---------------------------------------------------------------- audio scratch
+*.wav
+*.mp3
+*.ogg
+*.webm
+
+# ---------------------------------------------------------------- editors / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------------------------------------------------------------- secrets
+# Nothing in EduBuddy needs a key — it runs entirely offline — but this stops
+# an accidental commit if that ever changes.
+.env
+*.key
+*.pem

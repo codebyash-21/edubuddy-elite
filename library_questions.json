@@ -1,0 +1,266 @@
+{
+ "_readme": [
+  "Curated questions and answers for the Library and Study tabs.",
+  "",
+  "Source: the three Q&A study guides supplied by the project team.",
+  "  beyond_earth_qa  Beyond Earth, Curiosity Science Grade 6, Chapter 12  (15 Q)",
+  "  hindi_qa         पाठ 2: न्याय की कुर्सी, वीणा कक्षा 5 NCERT            (11 Q)",
+  "  tamil_qa         அறிவியல் 3-ஆம் வகுப்பு பருவம் 1                      (13 Q)",
+  "",
+  "The Hindi and Tamil PDFs have a broken font encoding — their text layer",
+  "extracts as mojibake ('कु<र्सी', 'வி0டை'). This content was transcribed from",
+  "the rendered pages instead, so it is correct here even though copying from",
+  "the PDFs is not.",
+  "",
+  "Fields:",
+  "  id        unique. Convention: en-1, hi-1, ta-1",
+  "  lang      en | hi | ta  -- decides the voice and the language filter",
+  "  book      shown on the citation chip and in the book filter",
+  "  page      page of the Q&A guide this came from",
+  "  question  shown to the student",
+  "  answer    shown in Library, revealed in Study after marking",
+  "  keywords  what a student's answer must contain to be marked correct.",
+  "            A keyword may be a LIST of alternatives -- any one counts.",
+  "",
+  "A student passes at 60% of keywords (config.LIBRARY_PASS_RATIO).",
+  "After editing:  python library.py --validate"
+ ],
+ "questions": [
+  {
+   "id": "en-1", "lang": "en", "book": "beyond_earth_qa", "page": 1,
+   "question": "What is a constellation, and how many official constellations are recognized today?",
+   "answer": "A constellation is a defined region of the sky containing groups of stars that appear to form recognizable patterns. The International Astronomical Union officially divided the whole celestial sphere into 88 distinct constellations in the early 20th century.",
+   "keywords": ["88", ["region", "pattern"]]
+  },
+  {
+   "id": "en-2", "lang": "en", "book": "beyond_earth_qa", "page": 1,
+   "question": "Why is the Pole Star crucial for celestial navigation?",
+   "answer": "The Pole Star appears almost stationary in the sky, directly above Earth's true north rotational axis. So observers in the Northern Hemisphere can find true north at night without a magnetic compass.",
+   "keywords": [["north"], ["stationary", "fixed"]]
+  },
+  {
+   "id": "en-3", "lang": "en", "book": "beyond_earth_qa", "page": 1,
+   "question": "How do you locate the Pole Star using the Big Dipper?",
+   "answer": "Find the ladle-shaped Big Dipper in the northern sky. Locate the two pointer stars on the outer edge of the cup, draw an imaginary line through them northward, and extend it about five times the distance between them. That line leads to the Pole Star.",
+   "keywords": [["pointer"], ["five times", "5 times"]]
+  },
+  {
+   "id": "en-4", "lang": "en", "book": "beyond_earth_qa", "page": 1,
+   "question": "What is the brightest star in the night sky, and how can you find it using Orion?",
+   "answer": "Sirius, in the constellation Canis Major, is the brightest star in the night sky. Find Orion, identify the three bright stars of Orion's Belt, and extend an imaginary line eastward through them. It leads directly to Sirius.",
+   "keywords": ["sirius", ["orion", "belt"]]
+  },
+  {
+   "id": "en-5", "lang": "en", "book": "beyond_earth_qa", "page": 1,
+   "question": "Why do stars twinkle while planets shine steadily?",
+   "answer": "Stars are so far away that they act as pinpoint sources of light, and Earth's turbulent atmosphere refracts their rays continuously, making them twinkle. Planets are much closer and appear as tiny disks, so the disturbance averages out across many points and the light stays steady.",
+   "keywords": [["atmosphere"], ["refract", "twinkl"]]
+  },
+  {
+   "id": "en-6", "lang": "en", "book": "beyond_earth_qa", "page": 2,
+   "question": "What is light pollution, and what is done to reduce it for astronomy?",
+   "answer": "Light pollution is excessive or misdirected artificial light at night from cities, streetlights and buildings, which hides faint objects in the sky. Governments set up Dark Sky Reserves, such as the Hanle Dark Sky Reserve in Ladakh, where outdoor lighting is strictly managed.",
+   "keywords": [["artificial light"], ["dark sky", "hanle"]]
+  },
+  {
+   "id": "en-7", "lang": "en", "book": "beyond_earth_qa", "page": 2,
+   "question": "What is an Astronomical Unit, and why is it useful?",
+   "answer": "An Astronomical Unit is the approximate average distance from the centre of the Earth to the centre of the Sun. It is roughly 150 million kilometres, and it is a convenient way to express distances between planets in the Solar System.",
+   "keywords": [["150 million", "150"], ["sun"]]
+  },
+  {
+   "id": "en-8", "lang": "en", "book": "beyond_earth_qa", "page": 2,
+   "question": "List the eight planets in order from the Sun, and say how the inner planets differ from the outer ones.",
+   "answer": "In order from the Sun: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus and Neptune. The inner planets are closer to the Sun, smaller, and have dense solid rocky surfaces. The outer planets are massive gas and ice giants made mostly of hydrogen, helium and volatile ices, with ring systems.",
+   "keywords": ["mercury", "neptune", ["inner"], ["outer"]]
+  },
+  {
+   "id": "en-9", "lang": "en", "book": "beyond_earth_qa", "page": 2,
+   "question": "Why is Venus hotter than Mercury even though Mercury is closer to the Sun?",
+   "answer": "Mercury receives more direct sunlight but has virtually no atmosphere to hold the heat. Venus has a very thick atmosphere rich in greenhouse gases that traps heat, pushing its surface temperature higher than anywhere on Mercury.",
+   "keywords": ["venus", ["atmosphere"], ["greenhouse", "trap"]]
+  },
+  {
+   "id": "en-10", "lang": "en", "book": "beyond_earth_qa", "page": 2,
+   "question": "Why was Pluto reclassified as a dwarf planet in 2006?",
+   "answer": "Pluto is smaller than Earth's Moon and shares its orbital neighbourhood beyond Neptune with other icy bodies in the Kuiper Belt. In 2006 the IAU decided a planet must orbit the Sun, be spherical under its own gravity, and have cleared the neighbourhood around its orbit. Pluto has not cleared its path, so it became a dwarf planet.",
+   "keywords": ["pluto", ["cleared"], ["dwarf"]]
+  },
+  {
+   "id": "en-11", "lang": "en", "book": "beyond_earth_qa", "page": 3,
+   "question": "What causes impact craters on the Moon, and why do they last so long?",
+   "answer": "Craters are bowl-shaped hollows formed when fast-moving meteoroids and asteroids strike the lunar surface. The Moon has no atmosphere, no liquid water, no active tectonics and no weather, so there is no wind or water erosion to wear them away, and they stay unchanged for millions of years.",
+   "keywords": [["meteoroid", "asteroid"], ["atmosphere"], ["erosion"]]
+  },
+  {
+   "id": "en-12", "lang": "en", "book": "beyond_earth_qa", "page": 3,
+   "question": "What is the Asteroid Belt and where is it?",
+   "answer": "The Asteroid Belt lies between the orbits of Mars and Jupiter. It holds millions of irregularly shaped rocky and metallic remnants left over from the early formation of the Solar System.",
+   "keywords": ["mars", "jupiter"]
+  },
+  {
+   "id": "en-13", "lang": "en", "book": "beyond_earth_qa", "page": 3,
+   "question": "What is a comet, and why does its tail appear near the Sun?",
+   "answer": "A comet is a small body of rock, dust and frozen gases from the cold outer Solar System. When its orbit brings it close to the Sun, solar radiation heats it and vaporises its ices, releasing gas and dust that form a glowing tail streaming away from the Sun.",
+   "keywords": [["frozen", "ice"], ["sun"], ["tail"]]
+  },
+  {
+   "id": "en-14", "lang": "en", "book": "beyond_earth_qa", "page": 3,
+   "question": "What is the Milky Way Galaxy, and what lies beyond it?",
+   "answer": "The Milky Way is our home barred spiral galaxy, containing hundreds of billions of stars, planetary systems including our own, dust and gas. Beyond it lies the observable Universe, with hundreds of billions of other galaxies.",
+   "keywords": [["spiral"], ["galax"]]
+  },
+  {
+   "id": "en-15", "lang": "en", "book": "beyond_earth_qa", "page": 3,
+   "question": "Summarise India's Chandrayaan missions and their milestones.",
+   "answer": "Chandrayaan-1 in 2008 confirmed water molecules on the Moon. Chandrayaan-2 in 2019 placed an orbiter in lunar orbit. On 23 August 2023 Chandrayaan-3 soft-landed its Vikram lander and Pragyan rover near the lunar south pole, making India the first nation to land in that region. August 23 is now National Space Day.",
+   "keywords": ["chandrayaan", ["south pole", "water"]]
+  },
+
+  {
+   "id": "hi-1", "lang": "hi", "book": "hindi_qa", "page": 1,
+   "question": "लड़कों को टीले पर क्या मिला और उन्होंने कौन-सा खेल शुरू किया?",
+   "answer": "टीले पर खेलते समय एक लड़के को ठोकर लगी, जिससे उसे वहाँ एक बड़ा और चिकना पत्थर दिखाई दिया। उसने उसे अपना सिंहासन घोषित किया और स्वयं राजा बनकर बैठ गया। उन्होंने राजा और प्रजा यानी दरबारी का खेल खेलना शुरू किया।",
+   "keywords": ["पत्थर", "सिंहासन", ["राजा", "दरबारी"]]
+  },
+  {
+   "id": "hi-2", "lang": "hi", "book": "hindi_qa", "page": 1,
+   "question": "टीले वाले लड़के के न्याय की चर्चा पूरे नगर में कैसे फैल गई?",
+   "answer": "जब दो किसानों के बीच ज़मीन को लेकर गहरा विवाद हुआ, तो वे राजा के दरबार में जाने के बजाय टीले वाले लड़के के पास आए। लड़के ने दोनों पक्षों की बात सुनकर ऐसा निष्पक्ष और सटीक फैसला दिया कि सब दंग रह गए। इसके बाद नगर के सभी लोग अपने विवाद सुलझाने उसी लड़के के पास आने लगे।",
+   "keywords": ["किसान", ["ज़मीन", "जमीन"], "फैसला"]
+  },
+  {
+   "id": "hi-3", "lang": "hi", "book": "hindi_qa", "page": 1,
+   "question": "टीले की खुदाई करने पर क्या निकला और विद्वानों ने उसके बारे में क्या बताया?",
+   "answer": "टीले की खुदाई करने पर एक अत्यंत सुंदर और नक्काशीदार सिंहासन निकला, जिसके चारों पायों पर चार देवदूतों की मूर्तियाँ बनी हुई थीं। विद्वान पंडितों ने बताया कि यह महाराजा विक्रमादित्य का सदियों पुराना सिंहासन है।",
+   "keywords": ["सिंहासन", "देवदूत", "विक्रमादित्य"]
+  },
+  {
+   "id": "hi-4", "lang": "hi", "book": "hindi_qa", "page": 1,
+   "question": "राजा जब पहली बार सिंहासन पर बैठने लगा, तो पहली मूर्ति ने क्या सवाल पूछा और राजा ने क्या स्वीकार किया?",
+   "answer": "पहली मूर्ति ने पूछा कि क्या तुम इस सिंहासन पर बैठने योग्य हो, क्या तुम्हें पूरा विश्वास है कि तुमने कभी चोरी नहीं की है। राजा ने लज्जा से सिर झुकाकर स्वीकार किया कि हाल ही में उसने क्रोधवश अपने एक दरबारी की ज़मीन पर अनुचित कब्जा कर लिया था।",
+   "keywords": ["चोरी", ["ज़मीन", "जमीन"], ["कब्जा", "कब्ज़ा"]]
+  },
+  {
+   "id": "hi-5", "lang": "hi", "book": "hindi_qa", "page": 1,
+   "question": "दूसरी और तीसरी मूर्ति ने राजा से कौन-से प्रश्न पूछे?",
+   "answer": "दूसरी मूर्ति ने पूछा कि क्या तुम विश्वास के साथ कह सकते हो कि तुमने कभी झूठ नहीं बोला। राजा ने माना कि उसने कई बार मुसीबतों से बचने के लिए झूठ बोला था। तीसरी मूर्ति ने पूछा कि बैठने से पहले यह बताओ कि क्या तुमने कभी किसी को चोट नहीं पहुँचाई है।",
+   "keywords": ["झूठ", "चोट"]
+  },
+  {
+   "id": "hi-6", "lang": "hi", "book": "hindi_qa", "page": 2,
+   "question": "भोले-भाले चरवाहे लड़के उस सिंहासन पर आसानी से बैठ जाते थे, लेकिन राजा उपवास के बाद भी क्यों नहीं बैठ पाया?",
+   "answer": "लड़के मन से पवित्र, निष्कपट और भोले-भाले थे; उनके हृदय में कोई कलुष, स्वार्थ या अहंकार नहीं था। इसके विपरीत राजा के मन में लोभ, झूठ, क्रोध और अपने पद व शक्ति का भारी अहंकार भरा हुआ था। न्याय के पवित्र आसन पर बैठने के लिए बाह्य तपस्या नहीं, बल्कि आंतरिक निष्पापता और शुद्ध चरित्र आवश्यक है।",
+   "keywords": [["पवित्र", "निष्कपट"], "अहंकार"]
+  },
+  {
+   "id": "hi-7", "lang": "hi", "book": "hindi_qa", "page": 2,
+   "question": "कहानी के अंत में चौथी मूर्ति ने क्या किया और क्यों?",
+   "answer": "चौथी मूर्ति ने जब राजा को अपनी पात्रता का आत्म-मूल्यांकन करने को कहा, तो राजा ने अहंकार में आकर सोचा कि धनवान और बलवान होने के कारण वह योग्य है और आगे बढ़ा। राजा के मन में छिपे इसी अहंकार को देखकर चौथी मूर्ति पूरे सिंहासन समेत पंख फैलाकर आकाश में उड़ गई।",
+   "keywords": ["चौथी", "उड़", "अहंकार"]
+  },
+  {
+   "id": "hi-8", "lang": "hi", "book": "hindi_qa", "page": 2,
+   "question": "विराम चिह्न किसे कहते हैं और इनका भाषा में क्या महत्व है?",
+   "answer": "लिखते समय भावों और विचारों के अनुसार जहाँ रुकना या ठहराव लेना होता है, वहाँ लगाए जाने वाले विशेष चिह्नों को विराम चिह्न कहते हैं, जैसे पूर्णविराम, अल्पविराम और उद्धरण चिह्न। इनके सही प्रयोग से वाक्य का अर्थ और भाव स्पष्ट हो जाता है।",
+   "keywords": ["विराम चिह्न", ["रुकना", "ठहराव"]]
+  },
+  {
+   "id": "hi-9", "lang": "hi", "book": "hindi_qa", "page": 2,
+   "question": "इन वाक्यों में से विशेषण शब्द छाँटिए: उज्जैन की प्राचीन और ऐतिहासिक नगरी के बाहर एक लंबा-चौड़ा मैदान था।",
+   "answer": "इस वाक्य के विशेषण हैं: प्राचीन, ऐतिहासिक और लंबा-चौड़ा। अन्य उदाहरण: इतनी छोटी उम्र में इतनी बुद्धि का होना आश्चर्य की बात है, में छोटी; राजा ने देखा कि वह बहुत ही सुंदर सिंहासन था, में सुंदर।",
+   "keywords": ["प्राचीन", "ऐतिहासिक", ["लंबा", "चौड़ा"]]
+  },
+  {
+   "id": "hi-10", "lang": "hi", "book": "hindi_qa", "page": 2,
+   "question": "यह कहानी किस प्राचीन भारतीय कथा-संग्रह पर आधारित है और इसकी क्या विशेषता है?",
+   "answer": "यह कहानी प्राचीन पुस्तक सिंहासन बत्तीसी पर आधारित है। इस कथा-संग्रह में राजा भोज को भूमि से राजा विक्रमादित्य का सिंहासन मिलता है, जिसमें बत्तीस पुतलियाँ जड़ी होती हैं। प्रत्येक पुतली राजा भोज को विक्रमादित्य के न्याय, त्याग और विवेक की एक कथा सुनाती है।",
+   "keywords": ["बत्तीसी", ["बत्तीस"], "विक्रमादित्य"]
+  },
+  {
+   "id": "hi-11", "lang": "hi", "book": "hindi_qa", "page": 3,
+   "question": "पाठ की इन लोक पहेलियों के उत्तर दीजिए: न तो खाय न तो पीवैह, संग मा रेंगत है।",
+   "answer": "इसका उत्तर परछाईं यानी छाया है। अन्य पहेलियाँ: एक जानवर ऐसो, जिकी दूम पे पैसो का उत्तर मोर है; हरो माथणो, लाल पेट का उत्तर तरबूज है; एक लकड़ी की ऐसी कहानी, ऊमें लुको है मीठो पानी का उत्तर गन्ना है; एक दिया, सबतर उंजियार का उत्तर सूर्य है।",
+   "keywords": ["परछा", "मोर", "तरबूज"]
+  },
+
+  {
+   "id": "ta-1", "lang": "ta", "book": "tamil_qa", "page": 1,
+   "question": "கிருமிகள் என்பவை யாவை? அவை உடலுக்குள் செல்லாமல் தடுக்க நாம் என்ன செய்ய வேண்டும்?",
+   "answer": "கிருமிகள் என்பவை நமது உடல்நலத்தைப் பாதிக்கும் மிக நுண்ணிய உயிரிகள் ஆகும். இவை நகங்களின் அடியிலும், விரல்களுக்கு இடையிலும், அசுத்தமான இடங்களிலும் காணப்படும். உணவுக்கு முன்னும் பின்னும், கழிவறையைப் பயன்படுத்திய பிறகும் சோப்பு போட்டு முறையாகக் கைகளைக் கழுவ வேண்டும்.",
+   "keywords": ["கிருமி", "சோப்பு", ["கழுவ", "கைகள"]]
+  },
+  {
+   "id": "ta-2", "lang": "ta", "book": "tamil_qa", "page": 1,
+   "question": "திறந்தவெளியில் மலம் கழிப்பதால் ஏற்படும் பாதிப்புகள் யாவை?",
+   "answer": "திறந்தவெளியில் மலம் கழிப்பதால் காலரா, வயிற்றுப்போக்கு போன்ற நீரின் வழியாகவும் பூச்சிகள் வழியாகவும் பரவும் நோய்கள் ஏற்படுகின்றன. நிலத்தடி நீர் மாசடைகிறது. மேலும் குழந்தைகளுக்குக் குடற்புழுக்கள் உருவாகி இரத்தசோகை ஏற்படுகிறது.",
+   "keywords": ["காலரா", "குடற்புழு", "இரத்தசோகை"]
+  },
+  {
+   "id": "ta-3", "lang": "ta", "book": "tamil_qa", "page": 1,
+   "question": "நல்ல தொடுதல் மற்றும் தீய தொடுதல் என்றால் என்ன? தீய தொடுதலை உணர்ந்தால் என்ன செய்ய வேண்டும்?",
+   "answer": "அன்பையும் பாதுகாப்பையும் தரும் தொடுதல் நல்ல தொடுதல் ஆகும். கோபம், பயம், எரிச்சல் அல்லது சங்கடத்தை ஏற்படுத்தும் தொடுதல் தீய தொடுதல் ஆகும். யாராவது தகாத முறையில் தொட முயன்றால் உடனடியாக தொடாதே என்று உரக்கக் கூற வேண்டும், அந்த இடத்தை விட்டு ஓடிவிட வேண்டும், உதவி கிடைக்கும் வரை நம்பகமான பெரியவர்களிடம் சொல்லிக்கொண்டே இருக்க வேண்டும். உதவி எண் 1098.",
+   "keywords": ["தொடாதே", "1098"]
+  },
+  {
+   "id": "ta-4", "lang": "ta", "book": "tamil_qa", "page": 1,
+   "question": "புலனுறுப்புகளைப் பாதுகாக்கும் சில முக்கிய வழிமுறைகளைக் கூறுக.",
+   "answer": "கண்கள்: போதிய வெளிச்சத்தில் படிக்க வேண்டும், திரைகளை குறைந்தபட்சம் 6 அடி தொலைவில் இருந்து பார்க்க வேண்டும். காதுகள்: கூர்மையான பொருள்களைப் பயன்படுத்தக் கூடாது, 85 டெசிபலுக்கு அதிகமான உரத்த ஒலியைத் தவிர்க்க வேண்டும். நாக்கு மற்றும் தோல்: தினமும் நாக்கு வழிப்பான் கொண்டு நாக்கைச் சுத்தம் செய்ய வேண்டும்.",
+   "keywords": [["6 அடி", "6"], "85", "நாக்"]
+  },
+  {
+   "id": "ta-5", "lang": "ta", "book": "tamil_qa", "page": 2,
+   "question": "மாற்றுத்திறனாளிகள் எனப்படுவோர் யார்? அவர்களுக்கு நாம் எவ்வாறு உதவலாம்?",
+   "answer": "ஒன்று அல்லது அதற்கு மேற்பட்ட புலனுறுப்புகளையோ, உடல் இயக்கத்தையோ முழுமையாகப் பயன்படுத்த இயலாதவர்கள் மாற்றுத்திறனாளிகள் எனப்படுவர். அவர்களுக்குப் பரிதாபம் காட்டாமல், இயல்பான மனிதர்களாக நடத்த வேண்டும். சாலையைக் கடக்க உதவுதல், கதவைத் திறந்துவிடுதல், பேருந்தில் இடம் அளித்தல் போன்ற உதவிகளைச் செய்யலாம். பார்வையற்றோர் படிக்க பிரெய்லி முறை பயன்படுகிறது.",
+   "keywords": ["மாற்றுத்திறனாளி", "பிரெய்லி"]
+  },
+  {
+   "id": "ta-6", "lang": "ta", "book": "tamil_qa", "page": 2,
+   "question": "பருப்பொருள் என்றால் என்ன? அதன் மூன்று நிலைகள் யாவை?",
+   "answer": "நிறை மற்றும் இடத்தை அடைத்துக்கொள்ளும் தன்மை கொண்ட எந்தவொரு பொருளும் பருப்பொருள் எனப்படும். பருப்பொருள்கள் மூன்று நிலைகளில் உள்ளன: திடம், திரவம் மற்றும் வாயு.",
+   "keywords": ["திடம்", "திரவம்", "வாயு"]
+  },
+  {
+   "id": "ta-7", "lang": "ta", "book": "tamil_qa", "page": 2,
+   "question": "திடம், திரவம், வாயு ஆகியவற்றின் பண்புகளை ஒப்பிடுக.",
+   "answer": "திடப்பொருள்: குறிப்பிட்ட வடிவம் மற்றும் கனஅளவு உண்டு, கடினமானது, துகள்கள் மிக நெருக்கமாக அமைந்திருக்கும். திரவப்பொருள்: குறிப்பிட்ட வடிவம் இல்லை, கனஅளவு உண்டு, எளிதில் பாயும். வாயுப்பொருள்: குறிப்பிட்ட வடிவமும் கனஅளவும் இல்லை, துகள்கள் மிகத் தளர்வாக இருப்பதால் அனைத்துத் திசைகளிலும் வேகமாகப் பரவும்.",
+   "keywords": ["திடப்பொருள்", "திரவப்பொருள்", "வாயுப்பொருள்"]
+  },
+  {
+   "id": "ta-8", "lang": "ta", "book": "tamil_qa", "page": 2,
+   "question": "பருப்பொருளின் நிலைமாற்றங்களை வரையறுக்க: உருகுதல், ஆவியாதல், உறைதல், சுருங்குதல்.",
+   "answer": "உருகுதல்: திடப்பொருளை வெப்பப்படுத்தும் போது திரவமாக மாறுவது. ஆவியாதல்: திரவப்பொருளை வெப்பப்படுத்தும் போது வாயுவாக மாறுவது. உறைதல்: திரவத்தைக் குளிர்விக்கும் போது திடப்பொருளாக மாறுவது. சுருங்குதல்: வாயு நிலையிலுள்ள பொருளைக் குளிர்விக்கும் போது திரவமாக மாறுவது.",
+   "keywords": ["உருகுதல்", "ஆவியாதல்", "உறைதல்"]
+  },
+  {
+   "id": "ta-9", "lang": "ta", "book": "tamil_qa", "page": 2,
+   "question": "விசை என்றால் என்ன? அதன் முதன்மைச் செயல்கள் யாவை?",
+   "answer": "ஒரு பொருளின் இடத்தை மாற்றவோ, நகரும் பொருளை நிறுத்தவோ அல்லது அதன் உருவத்தை மாற்றவோ செய்யப்படும் தள்ளுதல் அல்லது இழுத்தல் செயலே விசை எனப்படும். தள்ளுதல் என்பது பொருள் நகரும் திசையிலேயே விசை செயல்படுவது. இழுத்தல் என்பது பொருள் நகரும் திசைக்கு எதிர் திசையில் விசை செயல்படுவது.",
+   "keywords": ["தள்ளுதல்", "இழுத்தல்"]
+  },
+  {
+   "id": "ta-10", "lang": "ta", "book": "tamil_qa", "page": 3,
+   "question": "விசையின் வகைகள் யாவை?",
+   "answer": "விசை இரண்டு வகைப்படும். தொடு விசை என்பது பொருளைத் தொடுவதன் மூலம் செயல்படும் விசை, எடுத்துக்காட்டாக தசைநார் விசை, எந்திர விசை, உராய்வு விசை. தொடா விசை என்பது தொடாமலேயே செயல்படும் விசை, எடுத்துக்காட்டாக புவியீர்ப்பு விசை மற்றும் காந்த விசை.",
+   "keywords": ["தொடு விசை", "தொடா விசை", ["புவியீர்ப்பு", "காந்த"]]
+  },
+  {
+   "id": "ta-11", "lang": "ta", "book": "tamil_qa", "page": 3,
+   "question": "நீரைக் கொதிக்க வைத்தல் என்றால் என்ன? நீரின் கொதிநிலை எவ்வளவு?",
+   "answer": "ஒரு திரவத்தை வாயு நிலைக்குச் செல்லும் அளவிற்கு வெப்பப்படுத்துவதே கொதிக்க வைத்தல் ஆகும். நீரின் கொதிநிலை 100 டிகிரி செல்சியஸ் ஆகும். நீரைக் கொதிக்க வைத்துக் குடிப்பதால் அதிலுள்ள கிருமிகள் அழிகின்றன, செரிமானம் எளிதாகிறது, நீர்வழி நோய்கள் தடுக்கப்படுகின்றன.",
+   "keywords": ["100", ["கொதி"]]
+  },
+  {
+   "id": "ta-12", "lang": "ta", "book": "tamil_qa", "page": 3,
+   "question": "அழுத்த சமையற்கலனின் நன்மைகள் யாவை?",
+   "answer": "அழுத்த சமையற்கலன் உணவைச் சாதாரண பாத்திரங்களை விட 4 மடங்கு வேகமாகச் சமைக்கிறது. இதனால் சமையல் நேரம் குறைகிறது, எரிபொருள் மிச்சமாகி ஆற்றல் சேமிக்கப்படுகிறது, உணவிலுள்ள ஊட்டச்சத்துக்கள் வீணாகாமல் தக்கவைக்கப்படுகின்றன.",
+   "keywords": [["4 மடங்கு", "4"], "வேகமாக"]
+  },
+  {
+   "id": "ta-13", "lang": "ta", "book": "tamil_qa", "page": 3,
+   "question": "சமையலறை மருத்துவப் பொருள்களும் அவற்றின் மருத்துவக் குணங்களும் யாவை?",
+   "answer": "பூண்டு இரத்த அழுத்தத்தைச் சீராக்கும், சளியைக் குணப்படுத்தும். பெருங்காயம் செரிமானத்தை அதிகரிக்கும். இஞ்சி செரிமானத்தை ஊக்குவிக்கும், குமட்டல் உணர்வை நீக்கும். மஞ்சள் சிறந்த இயற்கை கிருமிநாசினி. கருப்பு மிளகு சளி மற்றும் இருமலுக்குச் சிறந்த நிவாரணி. இலவங்கம் பல் வலியைப் போக்க உதவும்.",
+   "keywords": ["பூண்டு", "இஞ்சி", "மஞ்சள்"]
+  }
+ ]
+}

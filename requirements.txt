@@ -1,0 +1,29 @@
+# EduBuddy — CPU-only offline stack.
+#
+# NOTE: torch and llama-cpp-python are NOT listed here. They need their own
+# package indexes (CPU-only wheels / prebuilt llama.cpp wheels) and setup.sh
+# installs them first. Installing this file on its own is fine afterwards.
+
+# --- speech to text
+faster-whisper==1.1.1
+av==13.1.0
+
+# --- model downloads
+huggingface-hub>=0.26,<1.0
+
+# --- text to speech (MMS-TTS / VITS) + multilingual embeddings
+transformers==4.46.3
+sentence-transformers==3.3.1
+
+# --- textbook RAG
+pymupdf==1.24.14
+
+# --- web server
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+python-multipart==0.0.20
+
+# --- misc
+numpy<2.0
+scipy>=1.11
+sounddevice==0.5.1        # terminal voice mode only; harmless with no mic

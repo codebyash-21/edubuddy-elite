@@ -1,0 +1,376 @@
+{
+  "_comment": "Validation set for EduBuddy. Each case: id, lang, question, book (expected source), any (answer passes if ANY of these strings appears), kind (short|long). For 'long' cases, 'any' lists every point that should appear and coverage is scored as a fraction.",
+  "cases": [
+    {
+      "id": "EN-1",
+      "lang": "en",
+      "kind": "short",
+      "book": "beyond_earth",
+      "question": "Which is the brightest star in the night sky?",
+      "any": [
+        "Sirius"
+      ]
+    },
+    {
+      "id": "EN-2",
+      "lang": "en",
+      "kind": "short",
+      "book": "beyond_earth",
+      "question": "What is the Pole Star known as in India?",
+      "any": [
+        "Dhruva",
+        "Dhruv"
+      ]
+    },
+    {
+      "id": "EN-3",
+      "lang": "en",
+      "kind": "short",
+      "book": "beyond_earth",
+      "question": "In which constellation does the Big Dipper lie?",
+      "any": [
+        "Ursa Major"
+      ]
+    },
+    {
+      "id": "EN-4",
+      "lang": "en",
+      "kind": "short",
+      "book": "beyond_earth",
+      "question": "How far is the Sun from the Earth?",
+      "any": [
+        "150 million",
+        "150,000,000"
+      ]
+    },
+    {
+      "id": "EN-5",
+      "lang": "en",
+      "kind": "short",
+      "book": "beyond_earth",
+      "question": "Which planet is called the Red Planet and why?",
+      "any": [
+        "Mars"
+      ]
+    },
+    {
+      "id": "EN-6",
+      "lang": "en",
+      "kind": "short",
+      "book": "beyond_earth",
+      "question": "Which is the nearest star to us after the Sun?",
+      "any": [
+        "Proxima Centauri",
+        "Proxima"
+      ]
+    },
+    {
+      "id": "EN-7",
+      "lang": "en",
+      "kind": "short",
+      "book": "beyond_earth",
+      "question": "What is light pollution?",
+      "any": [
+        "artificial light"
+      ]
+    },
+    {
+      "id": "EN-8",
+      "lang": "en",
+      "kind": "long",
+      "book": "beyond_earth",
+      "question": "How can we locate the Pole Star using the Big Dipper?",
+      "any": [
+        "Big Dipper",
+        "five times",
+        "north",
+        "line"
+      ]
+    },
+    {
+      "id": "EN-9",
+      "lang": "en",
+      "kind": "long",
+      "book": "beyond_earth",
+      "question": "How are the inner planets different from the outer planets?",
+      "any": [
+        "smaller",
+        "solid",
+        "gas",
+        "larger"
+      ]
+    },
+    {
+      "id": "EN-10",
+      "lang": "en",
+      "kind": "long",
+      "book": "beyond_earth",
+      "question": "How should you prepare for night sky watching?",
+      "any": [
+        "dark",
+        "adult",
+        "Moon",
+        "half an hour"
+      ]
+    },
+    {
+      "id": "EN-11",
+      "lang": "en",
+      "kind": "long",
+      "book": "beyond_earth",
+      "question": "Why is Venus hotter than Mercury even though it is farther from the Sun?",
+      "any": [
+        "atmosphere",
+        "trap",
+        "heat"
+      ]
+    },
+    {
+      "id": "EN-12",
+      "lang": "en",
+      "kind": "short",
+      "book": "beyond_earth",
+      "question": "How many days does the Moon take to revolve around the Earth?",
+      "any": [
+        "27 days",
+        "27"
+      ]
+    },
+    {
+      "id": "EN-NEG",
+      "lang": "en",
+      "kind": "negative",
+      "book": null,
+      "question": "How many moons does Jupiter have?",
+      "any": []
+    },
+    {
+      "id": "HI-1",
+      "lang": "hi",
+      "kind": "short",
+      "book": "hindi",
+      "question": "यह कहानी किस नगर के बाहर घटित होती है?",
+      "any": [
+        "उज्जैन"
+      ]
+    },
+    {
+      "id": "HI-2",
+      "lang": "hi",
+      "kind": "short",
+      "book": "hindi",
+      "question": "टीले से निकला पत्थर असल में क्या था?",
+      "any": [
+        "सिंहासन"
+      ]
+    },
+    {
+      "id": "HI-3",
+      "lang": "hi",
+      "kind": "short",
+      "book": "hindi",
+      "question": "सिंहासन के चारों पायों पर किसकी मूर्तियाँ बनी थीं?",
+      "any": [
+        "देवदूत"
+      ]
+    },
+    {
+      "id": "HI-4",
+      "lang": "hi",
+      "kind": "short",
+      "book": "hindi",
+      "question": "राजा को हर बार कितने दिन प्रायश्चित करना पड़ा?",
+      "any": [
+        "तीन",
+        "3"
+      ]
+    },
+    {
+      "id": "HI-5",
+      "lang": "hi",
+      "kind": "short",
+      "book": "hindi",
+      "question": "दो किसानों के बीच किस बात को लेकर झगड़ा हुआ था?",
+      "any": [
+        "जमीन",
+        "ज़मीन"
+      ]
+    },
+    {
+      "id": "HI-6",
+      "lang": "hi",
+      "kind": "long",
+      "book": "hindi",
+      "question": "लड़कों का खेल क्या था और वह कैसे खेला जाता था?",
+      "any": [
+        "राजा",
+        "दरबारी",
+        "फरियाद",
+        "फैसला"
+      ]
+    },
+    {
+      "id": "HI-7",
+      "lang": "hi",
+      "kind": "long",
+      "book": "hindi",
+      "question": "मूर्तियों ने राजा से कौन-कौन से प्रश्न पूछे?",
+      "any": [
+        "चोरी",
+        "झूठ",
+        "चोट"
+      ]
+    },
+    {
+      "id": "HI-8",
+      "lang": "hi",
+      "kind": "long",
+      "book": "hindi",
+      "question": "सिंहासन पर बैठने के लिए राजा ने क्या-क्या किया?",
+      "any": [
+        "तीन दिन",
+        "उपवास",
+        "प्रार्थना",
+        "मूर्ति"
+      ]
+    },
+    {
+      "id": "HI-9",
+      "lang": "hi",
+      "kind": "long",
+      "book": "hindi",
+      "question": "कहानी के अंत में क्या हुआ?",
+      "any": [
+        "चौथी",
+        "सिंहासन",
+        "उड़"
+      ]
+    },
+    {
+      "id": "HI-NEG",
+      "lang": "hi",
+      "kind": "negative",
+      "book": null,
+      "question": "विक्रमादित्य का जन्म कब हुआ था?",
+      "any": []
+    },
+    {
+      "id": "TA-1",
+      "lang": "ta",
+      "kind": "short",
+      "book": "tamil",
+      "question": "கை கழுவ எவ்வளவு நேரம் எடுக்க வேண்டும்?",
+      "any": [
+        "2 நிமிட",
+        "இரண்டு நிமிட"
+      ]
+    },
+    {
+      "id": "TA-2",
+      "lang": "ta",
+      "kind": "short",
+      "book": "tamil",
+      "question": "நாம் எந்த உறுப்பு மூலம் சுவைக்கிறோம்?",
+      "any": [
+        "நாக்க"
+      ]
+    },
+    {
+      "id": "TA-3",
+      "lang": "ta",
+      "kind": "short",
+      "book": "tamil",
+      "question": "தொலைக்காட்சியை எவ்வளவு தொலைவில் இருந்து பார்க்க வேண்டும்?",
+      "any": [
+        "6 அடி",
+        "ஆறு அடி"
+      ]
+    },
+    {
+      "id": "TA-4",
+      "lang": "ta",
+      "kind": "short",
+      "book": "tamil",
+      "question": "ஒலி அளவு எந்த அலகால் அளக்கப்படுகிறது?",
+      "any": [
+        "டெசிபல்"
+      ]
+    },
+    {
+      "id": "TA-5",
+      "lang": "ta",
+      "kind": "short",
+      "book": "tamil",
+      "question": "எத்தனை டெசிபலுக்கு மேற்பட்ட ஒலி ஆபத்தானது?",
+      "any": [
+        "85"
+      ]
+    },
+    {
+      "id": "TA-6",
+      "lang": "ta",
+      "kind": "short",
+      "book": "tamil",
+      "question": "பருப்பொருள்கள் எத்தனை நிலைகளில் உள்ளன?",
+      "any": [
+        "மூன்று",
+        "3"
+      ]
+    },
+    {
+      "id": "TA-7",
+      "lang": "ta",
+      "kind": "short",
+      "book": "tamil",
+      "question": "இட்டலி மாவை எத்தனை மணி நேரம் புளிக்க வைக்க வேண்டும்?",
+      "any": [
+        "8 மணி",
+        "எட்டு மணி"
+      ]
+    },
+    {
+      "id": "TA-8",
+      "lang": "ta",
+      "kind": "short",
+      "book": "tamil",
+      "question": "பல் வலியை நீக்க எது உதவுகிறது?",
+      "any": [
+        "இலவங்க"
+      ]
+    },
+    {
+      "id": "TA-9",
+      "lang": "ta",
+      "kind": "long",
+      "book": "tamil",
+      "question": "விசையின் விளைவுகள் யாவை?",
+      "any": [
+        "திசை",
+        "வேக",
+        "நிறுத்த",
+        "உரு"
+      ]
+    },
+    {
+      "id": "TA-10",
+      "lang": "ta",
+      "kind": "long",
+      "book": "tamil",
+      "question": "கைகளை எவ்வாறு சரியாகக் கழுவ வேண்டும்?",
+      "any": [
+        "சோப்",
+        "விரல்",
+        "நீர",
+        "நிமிட"
+      ]
+    },
+    {
+      "id": "TA-NEG",
+      "lang": "ta",
+      "kind": "negative",
+      "book": null,
+      "question": "உலகக் கை கழுவும் தினம் எப்போது கொண்டாடப்படுகிறது?",
+      "any": []
+    }
+  ]
+}

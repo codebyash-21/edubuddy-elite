@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>EduBuddy — Offline AI Tutor</title>
+<style>
+  :root{
+    --bg:#0f1420; --panel:#18203040; --card:#1b2334; --line:#2a3448;
+    --text:#e8edf7; --muted:#8b97ad; --accent:#4f8cff; --accent2:#22c98a;
+    --user:#2a3b5c; --bot:#1e2a3f;
+  }
+  *{box-sizing:border-box}
+
+  /* ---- Ask / Library / Study tabs ---- */
+  #tabs{display:flex;gap:4px;justify-content:center;padding:9px 20px 0;
+        border-bottom:1px solid var(--line)}
+  .tab{background:none;border:0;color:var(--muted);font-size:14px;padding:8px 20px;
+       border-radius:9px 9px 0 0;cursor:pointer;border-bottom:2px solid transparent}
+  .tab:hover{color:var(--text)}
+  .tab.active{color:var(--text);background:var(--card);border-bottom-color:var(--accent)}
+
+  .pane{flex:1;overflow-y:auto;padding:16px 22px 26px}
+  .filters{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+  .filters select,.filters input{background:var(--card);color:var(--text);
+      border:1px solid var(--line);border-radius:9px;padding:7px 11px;font:inherit;font-size:14px}
+  .filters input{flex:1;min-width:150px}
+  .btn-accent{background:var(--accent2);color:#04120b;border:0;border-radius:9px;
+      padding:8px 15px;font-weight:600;cursor:pointer}
+  .btn-accent:disabled{opacity:.5;cursor:default}
+
+  .qcard{background:var(--card);border:1px solid var(--line);border-radius:11px;
+         margin-bottom:9px;overflow:hidden}
+  .qcard.playing{border-color:var(--accent2)}
+  .qhead{display:flex;align-items:flex-start;gap:10px;padding:13px 15px;cursor:pointer}
+  .qhead:hover{background:#ffffff08}
+  .qtext{flex:1;line-height:1.5}
+  .qmeta{font-size:11px;color:var(--muted);white-space:nowrap;padding-top:3px}
+  .qbody{display:none;padding:0 15px 14px}
+  .qcard.open .qbody{display:block}
+  .qans{padding-top:11px;line-height:1.6;border-top:1px solid var(--line);margin-top:2px}
+  .qfoot{display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap}
+
+  /* ---- study ---- */
+  #studypane{max-width:760px;margin:0 auto}
+  .progress{font-size:12.5px;color:var(--muted);margin-bottom:10px}
+  .studyq{background:var(--card);border:1px solid var(--line);border-radius:12px;
+          padding:20px;font-size:17px;line-height:1.55;margin-bottom:14px}
+  .answerrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  #studyInput{flex:1;min-width:200px;background:var(--card);border:1px solid var(--line);
+      border-radius:11px;padding:12px 14px;color:var(--text);font:inherit}
+  .verdict{margin-top:15px;padding:15px 17px;border-radius:11px;line-height:1.6}
+  .verdict.right{background:#12301f;border:1px solid var(--accent2)}
+  .verdict.wrong{background:#301a1a;border:1px solid #e05260}
+  .vtitle{font-weight:600;margin-bottom:8px;font-size:15px}
+  .kw{font-size:12px;color:var(--muted);margin-top:9px}
+  .kw b{color:var(--text);font-weight:600}
+  .empty{color:var(--muted);font-size:13px;line-height:1.6}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Devanagari","Noto Sans Tamil",sans-serif;
+       background:linear-gradient(160deg,#0f1420,#141c2c);color:var(--text);height:100vh;display:flex;flex-direction:column}
+  header{padding:14px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  h1{font-size:18px;margin:0;letter-spacing:.3px}
+  .tag{font-size:11px;color:var(--muted);border:1px solid var(--line);padding:2px 8px;border-radius:20px}
+  .spacer{flex:1}
+  select,button{font:inherit;color:var(--text);background:var(--card);border:1px solid var(--line);
+                border-radius:9px;padding:7px 12px;cursor:pointer}
+  select:focus,button:focus{outline:2px solid var(--accent);outline-offset:1px}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  label.toggle{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--muted);cursor:pointer;user-select:none}
+  #status{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:7px}
+  .dot{width:9px;height:9px;border-radius:50%;background:#c9a227;flex:none}
+  .dot.ok{background:var(--accent2)} .dot.err{background:#e05260}
+  .dot.rec{background:#e05260;animation:pulse 1s infinite}
+  @keyframes pulse{50%{opacity:.25}}
+
+  #chat{flex:1;overflow-y:auto;padding:22px;display:flex;flex-direction:column;gap:14px}
+  .msg{max-width:min(680px,82%);padding:11px 15px;border-radius:15px;line-height:1.55;font-size:15px;white-space:pre-wrap;word-wrap:break-word}
+  .user{align-self:flex-end;background:var(--user);border-bottom-right-radius:5px}
+  .bot{align-self:flex-start;background:var(--bot);border-bottom-left-radius:5px}
+  .sys{align-self:center;color:var(--muted);font-size:12.5px;background:none;padding:3px}
+  .cite{margin-top:8px;font-size:11.5px;color:var(--accent2);display:flex;gap:6px;flex-wrap:wrap}
+  .cite span{border:1px solid #22c98a55;border-radius:5px;padding:1px 7px}
+  .who{font-size:10.5px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:5px}
+
+  footer{border-top:1px solid var(--line);padding:14px 20px;display:flex;gap:11px;align-items:center;flex-wrap:wrap}
+  #text{flex:1;min-width:220px;background:var(--card);border:1px solid var(--line);border-radius:11px;
+        padding:11px 14px;color:var(--text);font:inherit}
+  #mic{width:52px;height:52px;border-radius:50%;font-size:20px;display:grid;place-items:center;flex:none;
+       background:var(--accent);border:none;transition:.15s}
+  #mic.recording{background:#e05260;transform:scale(1.07)}
+  #level{width:70px;height:5px;background:var(--line);border-radius:3px;overflow:hidden;flex:none}
+  #levelbar{height:100%;width:0;background:var(--accent2);transition:width .08s}
+  .hint{font-size:11.5px;color:var(--muted);width:100%}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🎓 EduBuddy</h1>
+  <span class="tag">offline</span>
+  <select id="lang" title="Reply language">
+    <option value="auto">🌐 Auto-detect</option>
+    <option value="en">English</option>
+    <option value="hi">हिंदी</option>
+    <option value="ta">தமிழ்</option>
+  </select>
+  <label class="toggle"><input type="checkbox" id="continuous" /> Continuous</label>
+  <label class="toggle"><input type="checkbox" id="speakBack" checked /> Speak replies</label>
+  <div class="spacer"></div>
+  <div id="status"><span class="dot" id="dot"></span><span id="statusText">starting…</span></div>
+  <button id="soundFix" hidden title="Chrome blocked playback — click to allow it">🔇 Enable sound</button>
+  <button id="clear" title="Reset the conversation">Clear</button>
+</header>
+
+<nav id="tabs">
+  <button class="tab active" data-section="ask">Ask</button>
+  <button class="tab" data-section="library">Library</button>
+  <button class="tab" data-section="study">Study</button>
+</nav>
+
+<div id="chat"></div>
+
+<section id="librarypane" class="pane" hidden>
+  <div class="filters">
+    <select id="libLang"><option value="all">All languages</option></select>
+    <select id="libBook"><option value="all">All books</option></select>
+    <input id="libSearch" placeholder="Filter…" autocomplete="off" />
+    <button id="playAll" class="btn-accent">🔊 Read all aloud</button>
+    <button id="stopAll" class="btn-accent" hidden>■ Stop</button>
+  </div>
+  <div id="liblist"></div>
+</section>
+
+<section id="studypane" class="pane" hidden>
+  <div class="filters">
+    <select id="studyLang"><option value="all">All languages</option></select>
+    <button id="studyRestart" class="btn-accent">Restart</button>
+  </div>
+  <div class="progress" id="studyProgress"></div>
+  <div class="studyq" id="studyQ"></div>
+  <div class="answerrow">
+    <input id="studyInput" placeholder="Type your answer, or tap the mic…" autocomplete="off" />
+    <button id="studyMic" title="Speak your answer">🎤</button>
+    <button id="studyCheck" class="btn-accent">Check</button>
+    <button id="studyNext" hidden>Next →</button>
+  </div>
+  <div id="studyVerdict"></div>
+</section>
+
+<footer>
+  <button id="mic" title="Hold a conversation">🎤</button>
+  <div id="level"><div id="levelbar"></div></div>
+  <input id="text" placeholder="Type a question, or tap the mic…" autocomplete="off" />
+  <button id="send">Send</button>
+  <div class="hint">Silence for ~1.2 s ends your turn. Continuous mode re-opens the mic after each answer.</div>
+</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+const chat = $('chat');
+
+let ready = false, recording = false, busy = false;
+let mediaRecorder = null, chunks = [], stream = null;
+let audioCtx = null, analyser = null, levelTimer = null;
+let speechSeen = false, silenceStart = 0, hardStop = null;
+
+const SILENCE_LEVEL = 8;      // average byte level counted as silence
+const SILENCE_MS    = 1200;   // pause that ends an utterance
+const MAX_MS        = 20000;  // hard cap on one recording
+
+/* ---------------------------------------------------------------- UI */
+function bubble(role, text, citations, source){
+  const el = document.createElement('div');
+  el.className = 'msg ' + role;
+  if (role === 'sys'){ el.textContent = text; }
+  else {
+    const who = document.createElement('div');
+    who.className = 'who';
+    /* A pack answer is the textbook's own wording, returned without the model.
+       Say so: presenting a prewritten passage as EduBuddy's own sentence would
+       be the dishonest way to be fast. */
+    who.textContent = role === 'user' ? 'You'
+                    : (source === 'textbook' ? 'From the textbook' : 'EduBuddy');
+    el.appendChild(who);
+    el.appendChild(document.createTextNode(text));
+    if (citations && citations.length){
+      const c = document.createElement('div');
+      c.className = 'cite';
+      c.appendChild(document.createTextNode('📖'));
+      citations.forEach(t => { const s=document.createElement('span'); s.textContent=t; c.appendChild(s); });
+      el.appendChild(c);
+    }
+  }
+  chat.appendChild(el);
+  chat.scrollTop = chat.scrollHeight;
+  return el;
+}
+
+function setStatus(text, cls){
+  $('statusText').textContent = text;
+  $('dot').className = 'dot' + (cls ? ' ' + cls : '');
+}
+
+/* ------------------------------------------------------------ health */
+async function pollHealth(){
+  try{
+    const r = await fetch('/health');
+    const h = await r.json();
+    if (h.error){ setStatus('error: ' + h.error, 'err'); return; }
+    if (h.ready){
+      ready = true;
+      const books = (h.books || []).length;
+      setStatus(books ? `ready · ${books} textbook${books>1?'s':''}` : 'ready', 'ok');
+      $('mic').disabled = false;
+      return;                       // stop polling
+    }
+    const pending = ['stt','llm','tts','rag'].filter(k => !h[k]);
+    setStatus('loading ' + pending.join(', ') + '…');
+  }catch(e){ setStatus('server not reachable', 'err'); }
+  setTimeout(pollHealth, 1500);
+}
+
+/* -------------------------------------------------------------- chat */
+async function ask(message, lang){
+  busy = true;
+  const thinking = bubble('sys', 'searching the textbooks…');
+  try{
+    /* Retrieval takes about a second; generation takes tens of seconds on CPU.
+       Asking for the citations first lets the page show what was found while the
+       model is still writing — the same total wait, but visible progress rather
+       than a blank screen. The server caches the result, so /chat below reuses
+       it instead of searching twice. Any failure here is non-fatal: fall
+       straight through to /chat, which retrieves for itself. */
+    try{
+      const rr = await fetch('/retrieve', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ message })
+      });
+      const rd = await rr.json();
+      if (rd.pack){
+        thinking.textContent = 'found in ' + rd.citations.join(' · ') + ' — quoting it directly';
+      } else if (rd.citations && rd.citations.length){
+        thinking.textContent = 'found ' + rd.citations.join(' · ') + ' — writing the answer…';
+      } else if (rd.ready){
+        thinking.textContent = 'nothing matching in the textbooks — checking…';
+      } else {
+        thinking.textContent = 'thinking…';
+      }
+    }catch(e){ thinking.textContent = 'thinking…'; }
+
+    const r = await fetch('/chat', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ message, lang })
+    });
+    const data = await r.json();
+    thinking.remove();
+    if (data.error){ bubble('sys', data.error); return; }
+
+    bubble('bot', data.reply, data.citations, data.source);
+
+    if ($('speakBack').checked){
+      await speak(data.reply, data.lang);
+    }
+  }catch(e){
+    thinking.remove();
+    bubble('sys', 'Error: ' + e.message);
+  }finally{
+    busy = false;
+    if ($('continuous').checked && ready) setTimeout(startRecording, 350);
+  }
+}
+
+let currentAudio = null, speakCancelled = false, pendingAudio = null;
+
+/* Chrome refuses audio.play() when the call arrives long after the click that
+   started it — and an answer takes ~30 s, so every spoken reply lands outside
+   the gesture window. Two defences:
+
+     unlockAudio()  plays a silent clip on the first real interaction, which
+                    marks the page as allowed to make sound;
+     the catch      keeps the clip and offers an "Enable sound" button, because
+                    a blocked play must not look identical to a broken one.
+
+   The old version swallowed all three failure modes — server error, empty
+   response, blocked playback — into the same silence, which is why "no sound"
+   took a round of debugging to explain. */
+let audioUnlocked = false;
+function unlockAudio(){
+  if (audioUnlocked) return;
+  audioUnlocked = true;
+  try{
+    // 0.05 s of silence, played inside a genuine user gesture.
+    const a = new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEAgD4A'
+      + 'AAB9AAACABAAZGF0YQQAAAAAAAAA');
+    a.volume = 0;
+    a.play().catch(() => {});
+  }catch(e){}
+}
+
+function speak(text, lang){
+  return new Promise(async resolve => {
+    try{
+      const r = await fetch('/speak', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ text, lang })
+      });
+      if (speakCancelled) return resolve();
+      if (r.status === 204){
+        setStatus('nothing speakable in that reply', 'ok');
+        return resolve();
+      }
+      if (!r.ok){
+        setStatus('speech failed (HTTP ' + r.status + ')', 'err');
+        return resolve();
+      }
+      const blob = await r.blob();
+      if (speakCancelled) return resolve();
+      if (!blob.size){
+        setStatus('speech came back empty', 'err');
+        return resolve();
+      }
+      const audio = new Audio(URL.createObjectURL(blob));
+      currentAudio = audio;
+      audio.onended = audio.onerror = () => { currentAudio = null; resolve(); };
+      audio.play().catch(err => {
+        currentAudio = null;
+        pendingAudio = audio;
+        $('soundFix').hidden = false;
+        setStatus('browser blocked the audio — click “Enable sound”', 'err');
+        resolve();
+      });
+    }catch(e){
+      setStatus('speech failed: ' + e.message, 'err');
+      resolve();
+    }
+  });
+}
+
+/* Stop whatever is being read aloud. The flag matters as much as the pause:
+   a /speak request already in flight would otherwise start playing after the
+   user pressed stop. */
+function stopSpeaking(){
+  speakCancelled = true;
+  if (currentAudio){ try{ currentAudio.pause(); }catch(e){} currentAudio = null; }
+}
+
+/* =====================================================  Library and Study  ===
+   Both read from library_questions.json via /library. Nothing here loads a
+   model: the questions and answers were written by hand, and Study marks by
+   keyword overlap. That is why both tabs respond instantly while Ask takes
+   tens of seconds — they are doing genuinely less work, not hiding work.     */
+let micTarget = 'ask';
+let libData = null, studyList = [], studyAt = 0, studyScore = 0, studyDone = false;
+
+function esc(s){
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function switchSection(which){
+  document.querySelectorAll('.tab').forEach(t =>
+    t.classList.toggle('active', t.dataset.section === which));
+  $('chat').hidden        = which !== 'ask';
+  $('librarypane').hidden = which !== 'library';
+  $('studypane').hidden   = which !== 'study';
+  document.querySelector('footer').style.display = which === 'ask' ? '' : 'none';
+  stopSpeaking();
+  if (which !== 'ask' && libData === null) loadLibrary(which);
+  else if (which === 'study' && !studyList.length) startStudy();
+}
+
+async function loadLibrary(then){
+  try{
+    const r = await fetch('/library');
+    libData = await r.json();
+  }catch(e){
+    libData = { questions: [], languages: [], books: [], total: 0 };
+  }
+  const names = { en:'English', hi:'हिंदी', ta:'தமிழ்' };
+  const langOpts = '<option value="all">All languages</option>' +
+    (libData.languages||[]).map(l => `<option value="${l}">${names[l]||l}</option>`).join('');
+  $('libLang').innerHTML = langOpts;
+  $('studyLang').innerHTML = langOpts;
+  $('libBook').innerHTML = '<option value="all">All books</option>' +
+    (libData.books||[]).map(b => `<option value="${b}">${esc(b)}</option>`).join('');
+  renderLibrary();
+  if (then === 'study') startStudy();
+}
+
+function filtered(langSel, bookSel, needle){
+  return (libData?.questions || []).filter(q =>
+    (langSel === 'all' || q.lang === langSel) &&
+    (bookSel === 'all' || q.book === bookSel) &&
+    (!needle || (q.question + ' ' + q.answer).toLowerCase().includes(needle)));
+}
+
+const EMPTY_MSG =
+  '<div class="empty">No questions yet.<br><br>Add them to ' +
+  '<code>library_questions.json</code> in the project folder, then reload. ' +
+  'Check the file first with <code>python library.py --validate</code>.</div>';
+
+function renderLibrary(){
+  const list = $('liblist');
+  if (!libData || !libData.total){ list.innerHTML = EMPTY_MSG; return; }
+  const shown = filtered($('libLang').value, $('libBook').value,
+                         $('libSearch').value.trim().toLowerCase());
+  list.innerHTML = shown.map((q, i) => `
+    <div class="qcard" data-i="${i}">
+      <div class="qhead">
+        <div class="qtext">${esc(q.question)}</div>
+        <div class="qmeta">${q.book ? esc(q.book) + ' p.' + esc(q.page) : ''}</div>
+      </div>
+      <div class="qbody">
+        <div class="qans">${esc(q.answer)}</div>
+        <div class="qfoot"><button class="btn-accent one" data-i="${i}">🔊 Listen</button></div>
+      </div>
+    </div>`).join('');
+
+  list.querySelectorAll('.qhead').forEach(h =>
+    h.onclick = () => h.parentElement.classList.toggle('open'));
+  list.querySelectorAll('.one').forEach(b =>
+    b.onclick = async ev => {
+      ev.stopPropagation();
+      const q = shown[+b.dataset.i];
+      stopSpeaking(); speakCancelled = false;
+      b.disabled = true;
+      await speak(q.question + '. ' + q.answer, q.lang);
+      b.disabled = false;
+    });
+}
+
+async function readAll(){
+  const shown = filtered($('libLang').value, $('libBook').value,
+                         $('libSearch').value.trim().toLowerCase());
+  if (!shown.length) return;
+  speakCancelled = false;
+  $('playAll').hidden = true; $('stopAll').hidden = false;
+  const cards = $('liblist').querySelectorAll('.qcard');
+  for (let i = 0; i < shown.length; i++){
+    if (speakCancelled) break;
+    const card = cards[i];
+    if (card){ card.classList.add('open','playing'); card.scrollIntoView({block:'center'}); }
+    await speak(shown[i].question + '. ' + shown[i].answer, shown[i].lang);
+    if (card) card.classList.remove('playing');
+  }
+  $('playAll').hidden = false; $('stopAll').hidden = true;
+}
+
+/* ------------------------------------------------------------------ study */
+function startStudy(){
+  const lang = $('studyLang').value;
+  studyList = (libData?.questions || []).filter(q => lang === 'all' || q.lang === lang);
+  studyAt = 0; studyScore = 0; studyDone = false;
+  showStudy();
+}
+
+function showStudy(){
+  $('studyVerdict').innerHTML = '';
+  $('studyInput').value = '';
+  $('studyNext').hidden = true;
+  $('studyCheck').hidden = false;
+
+  if (!studyList.length){
+    $('studyQ').innerHTML = EMPTY_MSG;
+    $('studyProgress').textContent = '';
+    $('studyInput').disabled = $('studyCheck').disabled = $('studyMic').disabled = true;
+    return;
+  }
+  $('studyInput').disabled = $('studyCheck').disabled = $('studyMic').disabled = false;
+
+  if (studyAt >= studyList.length){
+    studyDone = true;
+    $('studyQ').textContent = `Finished — ${studyScore} of ${studyList.length} correct.`;
+    $('studyProgress').textContent = '';
+    $('studyInput').disabled = $('studyCheck').disabled = $('studyMic').disabled = true;
+    return;
+  }
+  const q = studyList[studyAt];
+  $('studyQ').textContent = q.question;
+  $('studyProgress').textContent =
+    `Question ${studyAt + 1} of ${studyList.length} · ${studyScore} correct so far`;
+  $('studyInput').focus();
+}
+
+async function checkStudy(){
+  if (studyDone || !studyList.length) return;
+  const q = studyList[studyAt];
+  const given = $('studyInput').value.trim();
+  if (!given) return;
+
+  $('studyCheck').disabled = true;
+  let r;
+  try{
+    const res = await fetch('/library/check', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ id: q.id, answer: given })
+    });
+    r = await res.json();
+  }catch(e){
+    $('studyCheck').disabled = false;
+    return;
+  }
+  $('studyCheck').disabled = false;
+  if (r.error){ $('studyVerdict').innerHTML = `<div class="verdict wrong">${esc(r.error)}</div>`; return; }
+
+  if (r.correct) studyScore++;
+  const kw = `<div class="kw">matched <b>${r.matched.map(esc).join(', ') || '—'}</b>` +
+             (r.missed.length ? ` · missed <b>${r.missed.map(esc).join(', ')}</b>` : '') +
+             `</div>`;
+  $('studyVerdict').innerHTML = `
+    <div class="verdict ${r.correct ? 'right' : 'wrong'}">
+      <div class="vtitle">${r.correct ? '✓ Correct' : '✗ Not quite'}</div>
+      <div>${esc(r.answer)}</div>
+      ${r.citation ? `<div class="cite" style="margin-top:9px"><span>📖 ${esc(r.citation)}</span></div>` : ''}
+      ${kw}
+    </div>`;
+  $('studyCheck').hidden = true;
+  $('studyNext').hidden = false;
+  $('studyNext').focus();
+
+  /* Read the correct answer aloud whenever "Speak replies" is on — hearing it
+     is the point of a voice tutor, and it matters most when you got it wrong. */
+  if ($('speakBack').checked){
+    stopSpeaking(); speakCancelled = false;
+    speak(r.answer, r.lang);
+  }
+}
+
+/* Which of en/hi/ta a string is written in, by counting codepoints.
+   Mirrors detect_lang() on the server so typed and spoken input agree. */
+function detectLang(text){
+  let dev = 0, tam = 0;
+  for (const ch of String(text || '')){
+    const c = ch.codePointAt(0);
+    if (c >= 0x0900 && c <= 0x097F) dev++;
+    else if (c >= 0x0B80 && c <= 0x0BFF) tam++;
+  }
+  if (tam > dev && tam > 0) return 'ta';
+  if (dev > 0) return 'hi';
+  return 'en';
+}
+
+function resolveLang(text){
+  const sel = $('lang').value;
+  // "auto" used to fall through to English, which gave a typed Hindi or Tamil
+  // question an English prompt, an English reply language and — most visibly —
+  // the English voice handed Indic text, which the synthesiser then refused.
+  // The script of what was typed is the answer, not a default.
+  return sel === 'auto' ? detectLang(text) : sel;
+}
+
+function sendTyped(){
+  const t = $('text').value.trim();
+  if (!t || busy) return;
+  $('text').value = '';
+  bubble('user', t);
+  ask(t, resolveLang(t));
+}
+
+/* --------------------------------------------------- mic + silence VAD */
+async function startRecording(){
+  if (recording || busy || !ready) return;
+  try{
+    if (!stream) stream = await navigator.mediaDevices.getUserMedia({
+      audio:{ echoCancellation:true, noiseSuppression:true, autoGainControl:true }
+    });
+  }catch(e){
+    bubble('sys','Microphone blocked. Allow mic access for this page, then try again.');
+    return;
+  }
+
+  if (!audioCtx){
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 512;
+    audioCtx.createMediaStreamSource(stream).connect(analyser);
+  }
+  if (audioCtx.state === 'suspended') await audioCtx.resume();
+
+  chunks = [];
+  speechSeen = false;
+  silenceStart = 0;
+
+  mediaRecorder = new MediaRecorder(stream);
+  mediaRecorder.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
+  mediaRecorder.onstop = handleRecordingStop;
+  mediaRecorder.start();
+
+  recording = true;
+  $('mic').classList.add('recording');
+  setStatus('listening…', 'rec');
+
+  const buf = new Uint8Array(analyser.frequencyBinCount);
+  levelTimer = setInterval(() => {
+    analyser.getByteFrequencyData(buf);
+    let sum = 0; for (let i=0;i<buf.length;i++) sum += buf[i];
+    const avg = sum / buf.length;
+
+    $('levelbar').style.width = Math.min(100, avg * 3) + '%';
+
+    if (avg >= SILENCE_LEVEL){
+      speechSeen = true;
+      silenceStart = 0;
+    } else if (speechSeen){
+      if (!silenceStart) silenceStart = Date.now();
+      else if (Date.now() - silenceStart > SILENCE_MS) stopRecording();
+    }
+  }, 100);
+
+  hardStop = setTimeout(stopRecording, MAX_MS);
+}
+
+function stopRecording(){
+  if (!recording) return;
+  recording = false;
+  clearInterval(levelTimer); levelTimer = null;
+  clearTimeout(hardStop); hardStop = null;
+  $('levelbar').style.width = '0';
+  $('mic').classList.remove('recording');
+  try{ mediaRecorder.stop(); }catch(e){}
+}
+
+async function handleRecordingStop(){
+  if (!speechSeen || !chunks.length){
+    setStatus('ready', 'ok');
+    if ($('continuous').checked && ready) setTimeout(startRecording, 400);
+    return;
+  }
+
+  setStatus('transcribing…');
+  const blob = new Blob(chunks, { type: 'audio/webm' });
+  const fd = new FormData();
+  fd.append('audio', blob, 'clip.webm');
+  fd.append('lang', $('lang').value);
+
+  try{
+    const r = await fetch('/transcribe', { method:'POST', body: fd });
+    const data = await r.json();
+    setStatus('ready', 'ok');
+
+    if (data.error){ bubble('sys', data.error); return; }
+
+    /* Study mode borrows the same microphone. The transcript goes into the
+       answer box instead of being asked, so the student can correct a
+       mis-hearing before it is marked — otherwise a Whisper slip looks like a
+       wrong answer, which would be a lie told by the interface. */
+    if (micTarget === 'study'){
+      micTarget = 'ask';
+      if (!data.text){ setStatus('did not catch that', 'ok'); return; }
+      $('studyInput').value = data.text;
+      return;
+    }
+
+    if (!data.text){
+      bubble('sys', 'I did not catch that — try again.');
+      if ($('continuous').checked) setTimeout(startRecording, 500);
+      return;
+    }
+    bubble('user', data.text);
+    ask(data.text, data.lang);
+  }catch(e){
+    setStatus('ready','ok');
+    bubble('sys','Transcription failed: ' + e.message);
+  }
+}
+
+/* ------------------------------------------------------------ wiring */
+$('mic').addEventListener('click', () => recording ? stopRecording() : startRecording());
+$('send').addEventListener('click', sendTyped);
+$('text').addEventListener('keydown', e => { if (e.key === 'Enter') sendTyped(); });
+$('clear').addEventListener('click', async () => {
+  await fetch('/clear', { method:'POST' });
+  chat.innerHTML = '';
+  bubble('sys','Conversation cleared.');
+});
+$('continuous').addEventListener('change', e => {
+  if (e.target.checked && ready && !recording && !busy) startRecording();
+  else if (!e.target.checked && recording) stopRecording();
+});
+
+$('mic').disabled = true;
+bubble('sys','Ask a question in English, Hindi or Tamil. Everything runs on this machine.');
+/* Any click anywhere counts as the gesture that lets the page make sound, so
+   the block below usually never fires at all. */
+document.addEventListener('pointerdown', unlockAudio, { once: true });
+document.addEventListener('keydown', unlockAudio, { once: true });
+
+$('soundFix').addEventListener('click', async () => {
+  $('soundFix').hidden = true;
+  audioUnlocked = true;
+  if (!pendingAudio) { setStatus('ready', 'ok'); return; }
+  const a = pendingAudio; pendingAudio = null;
+  currentAudio = a;
+  a.onended = a.onerror = () => { currentAudio = null; };
+  try{ await a.play(); setStatus('ready', 'ok'); }
+  catch(e){ setStatus('still blocked — allow Sound for this site in Chrome', 'err'); }
+});
+
+document.querySelectorAll('.tab').forEach(t =>
+  t.addEventListener('click', () => switchSection(t.dataset.section)));
+
+['libLang','libBook'].forEach(id => $(id).addEventListener('change', renderLibrary));
+$('libSearch').addEventListener('input', renderLibrary);
+$('playAll').addEventListener('click', readAll);
+$('stopAll').addEventListener('click', () => {
+  stopSpeaking();
+  $('playAll').hidden = false; $('stopAll').hidden = true;
+});
+
+$('studyLang').addEventListener('change', startStudy);
+$('studyRestart').addEventListener('click', startStudy);
+$('studyCheck').addEventListener('click', checkStudy);
+$('studyNext').addEventListener('click', () => { studyAt++; showStudy(); });
+$('studyInput').addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  if ($('studyNext').hidden) checkStudy();
+  else { studyAt++; showStudy(); }
+});
+$('studyMic').addEventListener('click', () => {
+  if (recording){ stopRecording(); return; }
+  micTarget = 'study';
+  startRecording();
+});
+
+pollHealth();
+</script>
+</body>
+</html>
