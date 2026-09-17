@@ -90,7 +90,7 @@ Copy the clone URL from the green **Code** button on the repository page, then:
 
 ```bash
 cd ~
-git clone https://github.com/REPLACE-WITH-REPO-OWNER/edubuddy.git
+git clone https://github.com/codebyash-21/edubuddy.git
 cd edubuddy
 ```
 
