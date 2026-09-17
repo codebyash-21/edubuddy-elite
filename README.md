@@ -1,4 +1,4 @@
-# EduBuddy Dynamic
+# EduBuddy Elite
 
 Offline multilingual AI voice tutor — **English / Hindi / Tamil**.
 
@@ -10,11 +10,32 @@ one-time setup download **no internet is required** — nothing leaves the devic
 Runs on both a **laptop (x86-64 Linux / WSL2)** and a **Raspberry Pi 4 or 5
 (ARM64)** from the same codebase.
 
-### What "Dynamic" means
+---
 
-This is the current build of the project. Against the earlier `edubuddy deploy`
-it adds two things, both aimed at the same problem — a thirty-second wait on
-CPU-only hardware.
+## The three tabs
+
+**Ask** — the tutor. A student asks anything; EduBuddy searches the indexed
+textbooks, answers from what it found, and shows the page citations. When the
+books do not cover the question it says so and shows no citations, because a
+page number beside a guess is worse than no answer at all.
+
+**Library** — the textbook's own questions and answers, browsable, with language
+and book filters and a *Read all aloud* control that speaks every pair in turn.
+
+**Study** — one question at a time. The student answers by typing or speaking
+and is marked instantly, then shown and told the correct answer.
+
+Library and Study respond in milliseconds because **no model runs** on those
+paths: the content is written by hand and marking is keyword comparison. Ask is
+the slow one, and it is slow for a reason — it is generating.
+
+---
+
+## What is in Elite
+
+Against the earlier `edubuddy deploy` build this adds four things. The first two
+attack the same problem — a thirty-second wait on CPU-only hardware; the last
+two are new ways to use the same engine.
 
 **Progressive display.** The interface shows what was found about a second in,
 while the model is still writing, instead of holding a blank screen until the
@@ -35,17 +56,8 @@ python qa_pack.py --build                # the real thing (slow, one time)
 python qa_pack.py --test "your question" # what would match, and by how much
 ```
 
-**Library and Study.** Two more tabs beside Ask, both driven by
-`library_questions.json` — question and answer pairs **you write by hand**.
-Nothing is generated or retrieved, so both tabs respond instantly.
-
-- **Library** browses the pairs with language and book filters, a citation on
-  each, and a *Read all aloud* control that speaks every question and answer in
-  turn.
-- **Study** asks one question at a time. The student answers by typing or
-  speaking, and is marked immediately on keyword overlap — no model, so the
-  verdict arrives in milliseconds and can always be explained by which terms
-  were found. The correct answer is then shown and read aloud.
+**Library and Study.** Both driven by `library_questions.json` — question and
+answer pairs **you write by hand**. Nothing is generated or retrieved.
 
 ```bash
 python library.py --validate               # before any demo
@@ -83,7 +95,7 @@ python app.py                  # or the desktop window
 **A shortcut worth installing**, so you are not typing three lines every time:
 
 ```bash
-echo 'source ~/edubuddy/edubuddy/edubuddy.sh' >> ~/.bashrc
+echo 'source ~/edubuddy-elite/edubuddy.sh' >> ~/.bashrc
 source ~/.bashrc
 ```
 
@@ -92,10 +104,10 @@ window, `edubuddy compare` runs the pack comparison, `edubuddy help` lists the
 rest. Tab completion included.
 
 `edubuddy deploy` runs the **same install with question packs switched off**,
-which is exactly the pre-pack behaviour. There is deliberately no second
-installation: two copies would drift apart, and any comparison between them
-would then be measuring the drift rather than the packs. The switch is one
-environment variable, `EDUBUDDY_QA=0`.
+which reproduces the pre-pack behaviour of the earlier build. There is
+deliberately no second installation: two copies would drift apart, and any
+comparison between them would then be measuring the drift rather than the packs.
+The switch is one environment variable, `EDUBUDDY_QA=0`.
 
 Two interfaces, one engine. `web.py` serves a browser page; `app.py` opens a
 Tkinter window. Identical retrieval, question packs, grounding and refusal — the
@@ -119,8 +131,8 @@ Which to use:
 Start to finish, from a clean Pi:
 
 ```bash
-git clone https://github.com/codebyash-21/edubuddy.git
-cd edubuddy
+git clone https://github.com/codebyash-21/edubuddy-elite.git
+cd edubuddy-elite
 
 chmod +x setup_pi.sh
 ./setup_pi.sh                  # one time; builds llama.cpp for ARM, 40-70 min
@@ -132,6 +144,10 @@ python ingest.py --all
 
 EDUBUDDY_PROFILE=pi python web.py
 ```
+
+**Library and Study work immediately after install**, before you add any
+textbooks — they read `library_questions.json`, which ships with the repository.
+Only Ask needs the PDFs.
 
 `setup_pi.sh` refuses to run on under 4 GB of RAM, warns if you have booted from
 a microSD card rather than SSD or USB, and checks the SoC temperature before
@@ -145,8 +161,7 @@ Then browse from another device on the network to `http://<pi-ip>:7860`
 **Which profile to use.** `EDUBUDDY_PROFILE=pi` selects the smaller models and
 tighter limits. A **Pi 5 with 16 GB** can instead run the desktop profile
 unchanged — just omit the variable — which reproduces the validated laptop
-results exactly, at roughly 60-90 s per answer. A Pi 4, or an 8 GB Pi 5, should
-stay on the `pi` profile.
+results exactly. A Pi 4, or an 8 GB Pi 5, should stay on the `pi` profile.
 
 > **Microphone over the network:** browsers only allow microphone access on a
 > secure origin. `127.0.0.1` counts; `http://<pi-ip>` does not, so the mic will
@@ -164,7 +179,7 @@ stay on the `pi` profile.
 ## Textbooks are not in this repository
 
 School textbook PDFs are copyrighted, so `books/` ships empty and is excluded by
-`.gitignore`. Nothing works until you add your own.
+`.gitignore`. Ask does not work until you add your own.
 
 ```bash
 cp your_chapter.pdf books/
@@ -203,8 +218,9 @@ text repairs, grounding and refusal, and the evaluation harness.
 A **Pi 5 with 16 GB** can run the desktop profile unchanged, which reproduces
 the laptop's validated results exactly. A Pi 4 needs the `pi` profile.
 
-Expect roughly **26 s** per grounded answer on a laptop, **60–90 s** on a Pi 5,
-and **2–3 min** on a Pi 4.
+Note that the `pi` profile uses a **smaller model and half the context**, so the
+accuracy figures below do not transfer to it. They were measured on the desktop
+profile.
 
 ---
 
@@ -229,17 +245,18 @@ Drop PDFs into `books/` and they are indexed at startup, as above. Two caveats:
 python verify.py               # install self-check with load timings
 python ingest.py --list        # indexed books and chunk counts
 python ingest.py --search "your question"   # test retrieval without the LLM
+python library.py --validate   # check the Library/Study content
 
 python diagnose.py             # what retrieval hands the model, per case (seconds)
 python research_diagnostics.py # retrieval ablations + metrics  (~2 min)
 python benchmark.py            # where the time actually goes, per stage
-python benchmark.py --compare-pack --limit 6   # deploy vs dynamic, measured
-python evaluate.py --no-tts    # full 34-question end-to-end run (~30 min)
+python benchmark.py --compare-pack --limit 6   # question packs off vs on
+python evaluate.py --no-tts    # full 34-question end-to-end run
 ```
 
-Run them in that order. The first three load no language model at all, so they
-finish in seconds to minutes and tell you whether a problem is even worth
-investigating end-to-end.
+Run them in that order. The first four load no language model at all, so they
+finish in seconds and tell you whether a problem is even worth investigating
+end-to-end.
 
 `diagnose.py` labels every test case `ALL PRESENT`, `PARTIAL` or `NONE FOUND`,
 which separates *"the search found the wrong page"* from *"the model misread the
@@ -254,8 +271,7 @@ MRR for each.
 `evaluate.py` is the end-to-end run. It scores generated answers automatically
 and writes timestamped CSV / Markdown / JSON into `results/` along with a
 snapshot of every configuration parameter, so runs are reproducible and two
-models can be compared fairly. On a Pi expect this to take a few hours; start
-with `--lang en` to sanity-check the install before committing to a full pass.
+models can be compared fairly.
 
 ---
 
@@ -264,25 +280,25 @@ with `--lang en` to sanity-check the install before committing to a full pass.
 | File | Purpose |
 |---|---|
 | `config.py` | All settings: profiles, per-language models, retrieval parameters, tutor prompts |
-| `web.py` | FastAPI server — `/transcribe`, `/chat`, `/speak`, `/clear`, `/health`, `/books` |
-| `ui.html` | Browser frontend: language selector, citations, silence detection, continuous mode |
+| `web.py` | FastAPI server — `/transcribe`, `/chat`, `/retrieve`, `/speak`, `/library`, `/health` |
+| `ui.html` | Browser frontend: Ask / Library / Study tabs, citations, silence detection |
 | `stt.py` | Speech to text (faster-whisper) |
-| `llm.py` | Language model: per-language registry, LRU eviction, sharded downloads |
+| `llm.py` | Language model: per-language registry, LRU eviction, wrong-script sentence strip |
 | `tts.py` | Speech synthesis (MMS-TTS), one cached voice per language |
 | `rag.py` | PDF extraction with Indic glyph repair, chunking, hybrid retrieval |
+| `library.py` | Curated Q&A loading, validation, and keyword marking |
+| `library_questions.json` | **Your** question and answer pairs — edit this one |
+| `qa_pack.py` | Builds the question pack offline (the model writes the questions) |
+| `qa_match.py` | Matches a question against the pack at query time — no model |
 | `ingest.py` | Textbook indexing CLI |
 | `main.py` | Terminal mode (`--text`, `--mute`, `--lang`) |
+| `app.py` | Tkinter desktop window — same engine as `web.py` |
+| `edubuddy.sh` | Shell shortcut: `edubuddy`, `edubuddy app`, `edubuddy compare`… |
 | `verify.py` | Post-install self-check |
 | `evaluate.py` | End-to-end validation harness with config snapshotting |
 | `diagnose.py` | Retrieval inspector — no model loaded |
 | `research_diagnostics.py` | Ablation harness: coverage, first-rank, MRR per design choice |
-| `qa_pack.py` | Builds the question pack offline (the model writes the questions) |
-| `qa_match.py` | Matches a question against the pack at query time — no model |
-| `library.py` | Curated Q&A loading, validation, and keyword marking |
-| `library_questions.json` | **Your** question and answer pairs — edit this one |
-| `benchmark.py` | Per-stage timings and an `LLM_MAX_TOKENS` sweep |
-| `app.py` | Tkinter desktop window — same engine as `web.py` |
-| `edubuddy.sh` | Shell shortcut: `edubuddy`, `edubuddy app`, `edubuddy compare`… |
+| `benchmark.py` | Per-stage timings, `LLM_MAX_TOKENS` sweep, question-pack comparison |
 | `testcases.json` | The 34-question validation set (21 short, 10 long, 3 negative controls) |
 | `setup.sh` / `setup_pi.sh` | Installers for x86-64 and ARM |
 | `SETUP_PI.md` | Step-by-step Raspberry Pi setup guide |
@@ -292,7 +308,7 @@ with `--lang en` to sanity-check the install before committing to a full pass.
 
 ## Measured results
 
-### Full validation run — 34 questions, Gemma 4 E4B
+### Full validation run — 34 questions, Gemma 4 E4B, desktop profile
 
 | Scope | Cases | Pass | Partial | Fail | Pass rate | Retrieval OK | Median |
 |---|---|---|---|---|---|---|---|
@@ -301,7 +317,7 @@ with `--lang en` to sanity-check the install before committing to a full pass.
 | Tamil | 11 | 9 | 2 | 0 | 82% | **100%** | 38.0 s |
 | **All** | **34** | **26** | **6** | **2** | **76%** | **100%** | **37.3 s** |
 
-Measured at `RAG_TOP_K = 6`; the shipped default is 4, which is ~11 s faster per
+Measured at `RAG_TOP_K = 6`; the shipped default is 4, which is faster per
 answer at the cost of one Hindi case. Retrieval delivered the correct page for
 every book-backed question, so all eight non-passes are generation-side — the
 model had the right page and misread it.
@@ -347,10 +363,12 @@ Full method, ablations and per-decision measurements are in
   contains all four expected terms, so it can never exceed PARTIAL. This is a
   fault in the test set, not the system.
 - **Latency** is not conversational on CPU-only hardware: ~37 s median on a
-  laptop, an estimated 60-90 s on a Pi 5.
-- **All Raspberry Pi timings are estimates** from published benchmarks. They
-  have not been reproduced on our own hardware. If you are the one running this
-  on a Pi — please record real numbers and replace them.
+  laptop for a generated answer. Question packs, Library and Study bypass the
+  model entirely and respond in milliseconds.
+- **Raspberry Pi performance is still being measured.** Figures quoted elsewhere
+  are estimates from published benchmarks, not our own hardware.
+- **The `pi` profile is not the validated configuration** — smaller model, half
+  the context. The accuracy figures above were measured on `desktop`.
 - **Scanned textbooks** are unsupported without an OCR pre-pass.
 - **Microphone is blocked over the network** (browser secure-origin rule); see
   the Pi quick start above.
