@@ -270,7 +270,7 @@ async function ask(message, lang){
   }
 }
 
-let currentAudio = null, speakCancelled = false, pendingAudio = null;
+let currentAudio = null, pendingAudio = null, speakToken = 0, readingAll = false;
 
 /* Chrome refuses audio.play() when the call arrives long after the click that
    started it — and an answer takes ~30 s, so every spoken reply lands outside
@@ -299,12 +299,14 @@ function unlockAudio(){
 
 function speak(text, lang){
   return new Promise(async resolve => {
+    const token = ++speakToken;
+    const cancelled = () => token !== speakToken;
     try{
       const r = await fetch('/speak', {
         method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({ text, lang })
       });
-      if (speakCancelled) return resolve();
+      if (cancelled()) return resolve();
       if (r.status === 204){
         setStatus('nothing speakable in that reply', 'ok');
         return resolve();
@@ -314,7 +316,7 @@ function speak(text, lang){
         return resolve();
       }
       const blob = await r.blob();
-      if (speakCancelled) return resolve();
+      if (cancelled()) return resolve();
       if (!blob.size){
         setStatus('speech came back empty', 'err');
         return resolve();
@@ -340,7 +342,8 @@ function speak(text, lang){
    a /speak request already in flight would otherwise start playing after the
    user pressed stop. */
 function stopSpeaking(){
-  speakCancelled = true;
+  speakToken++;
+  readingAll = false;
   if (currentAudio){ try{ currentAudio.pause(); }catch(e){} currentAudio = null; }
 }
 
@@ -421,7 +424,7 @@ function renderLibrary(){
     b.onclick = async ev => {
       ev.stopPropagation();
       const q = shown[+b.dataset.i];
-      stopSpeaking(); speakCancelled = false;
+      stopSpeaking();
       b.disabled = true;
       await speak(q.question + '. ' + q.answer, q.lang);
       b.disabled = false;
@@ -432,11 +435,11 @@ async function readAll(){
   const shown = filtered($('libLang').value, $('libBook').value,
                          $('libSearch').value.trim().toLowerCase());
   if (!shown.length) return;
-  speakCancelled = false;
+  readingAll = true;
   $('playAll').hidden = true; $('stopAll').hidden = false;
   const cards = $('liblist').querySelectorAll('.qcard');
   for (let i = 0; i < shown.length; i++){
-    if (speakCancelled) break;
+    if (!readingAll) break;
     const card = cards[i];
     if (card){ card.classList.add('open','playing'); card.scrollIntoView({block:'center'}); }
     await speak(shown[i].question + '. ' + shown[i].answer, shown[i].lang);
@@ -520,7 +523,7 @@ async function checkStudy(){
   /* Read the correct answer aloud whenever "Speak replies" is on — hearing it
      is the point of a voice tutor, and it matters most when you got it wrong. */
   if ($('speakBack').checked){
-    stopSpeaking(); speakCancelled = false;
+    stopSpeaking();
     speak(r.answer, r.lang);
   }
 }
