@@ -90,8 +90,8 @@ Copy the clone URL from the green **Code** button on the repository page, then:
 
 ```bash
 cd ~
-git clone https://github.com/codebyash-21/edubuddy.git
-cd edubuddy
+git clone https://github.com/codebyash-21/edubuddy-elite.git
+cd edubuddy-elite
 ```
 
 If `git` is missing: `sudo apt install -y git`, then retry.
